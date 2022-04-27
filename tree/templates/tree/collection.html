@@ -1,0 +1,24 @@
+{% extends 'tree/base.html' %} 
+
+
+{% block title %} All Trees {% endblock %} 
+{% if user.is_authenticated %}
+
+{% block content %}
+{% if types %}
+
+    <ul>
+    {% for tree in types %} 
+    <li><a href="{% url 'tree:neighborhoods' tree.ttid %}"> {{tree.tree_type}} </a></li>
+         
+    {% endfor %}
+    </ul>
+{% else %}  
+    <p>No Trees Have Been Added</p>    
+{% endif %} 
+{% endblock %}
+
+{% else %} 
+    <p>Login <a href="/tree/login">Here</a></p>
+
+{% endif %}

@@ -1,0 +1,43 @@
+{% extends 'tree/base.html' %} 
+{% load auth_extras %}
+{% block title %} {{tree.type}} {% endblock %} 
+
+{% if user.is_authenticated %}
+{% block content %} 
+<h1>{{tree.type.type}}</h1>
+<ul>
+    
+
+<li>Scientific Name: {{tree.type.tree_type}}</li>
+<li>Location: {{tree.street.address}}, {{tree.street.neighborhood.neighborhood}}</li>
+{% if tree.alive == 'TRUE' %}
+    <li>Alive</li>
+{% else %}
+    <li>Not Alive</li>
+{% endif %}
+
+<br>
+<li>Radius: {{avg.radius}} cm</li>
+<ul>
+    <li>Last Date Tracked: {{avg.month}}/{{avg.year}}</li>
+    <li>Biomass on this day: {{avg.biomass}} kg</li>
+</ul>
+<br>
+<br>
+<h6>Carbon Statistics last recorded in {{results.year}}</h6>
+<li>Carbon Absorbed: {{results.carbon_absorbed}} kg/year</li>
+<li>Carbon Stocked: {{results.carbon_stocked}} kg/year</li>
+<li>Carbon Produced: {{results.carbon_produced}} kg/year</li>
+
+
+
+</ul>
+{% if request.user|has_group:"Qualified User" %} 
+    <p>Want to delete this <a href="{% url 'tree:delete' tree.tid %}">tree?</a></p> 
+{% endif %}
+
+{% endblock %} 
+{% else %} 
+    <p>Login <a href="/tree/login">Here</a></p>
+
+{% endif %}

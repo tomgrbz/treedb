@@ -1,0 +1,40 @@
+{% extends 'tree/base.html' %} 
+
+
+{% block title %} Trees {% endblock %} 
+
+{% block content %}
+
+
+    <ul>
+    {% for n in n_list %}
+    <li>{{n.neighborhood}}:
+        
+        <ul>
+            {% for street in st_list %}
+            {% if street.neighborhood == n %}
+            <li>{{street.address}}
+            <ul>
+                {% for tr in trees %}
+                {% if tr.street == street %}
+                
+                <li><a href="{% url 'tree:view' tr.tid %}">{{tr.tid}}</a>  </li>
+                
+                {% else %} 
+
+                {% endif %}
+                {% endfor %}
+            </ul>
+            </li>
+            {% else %}
+            {% endif %}
+            {% endfor %}
+        </ul>
+        
+    </li>
+          
+    {% endfor %} 
+</ul> 
+
+
+{% endblock %}

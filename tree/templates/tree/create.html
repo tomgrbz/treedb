@@ -1,0 +1,24 @@
+{% extends 'tree/base.html' %} 
+
+
+{% block title %} Create a Tree {% endblock %} 
+
+{% block content %}
+<h3>Create a New Tree Below</h3>
+<form method="POST" action="" class="form-group">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+        
+            {{form.as_p}}
+            <a href='https://apps-scf-cfs.rncan.gc.ca/calc/en/biomass-calculator'>Use this link for biomass calculations</a>
+    </div>
+
+    <div class="input-group-prepend">
+        <button type="submit", name="save" class="btn btn-success">Create Tree</button>
+    </div>
+
+</form>
+
+<br>
+
+{% endblock %}

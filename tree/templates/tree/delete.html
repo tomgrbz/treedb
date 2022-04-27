@@ -1,0 +1,26 @@
+{% extends 'tree/base.html' %} 
+{% load auth_extras %}
+{% block title %} {{tree.type}} {% endblock %} 
+
+{% if user.is_authenticated %}
+{% block content %} 
+<h3>Delete The Tree Below</h3>
+<form method="POST" action="" class="form-group">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+            <p>Would you like to delete this tree?</p>
+            <p>{{tree.tid}}</p>
+            {{form.as_p}}
+            
+    </div>
+
+    <div class="input-group-prepend">
+        <button type="submit", name="save" class="btn btn-success">Delete Tree</button>
+    </div>
+
+</form>
+{% endblock %}
+{% else %} 
+    <p>Login <a href="/tree/login">Here</a></p>
+
+{% endif %}
