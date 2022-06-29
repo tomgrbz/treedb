@@ -12,7 +12,7 @@ class CreateNewTree(forms.Form):
     rad_month = forms.IntegerField(label='Month this Radius was measured')
     biomass = forms.DecimalField(label="Biomass at time of recording")
     desc = forms.CharField(label='Description of the Tree:')
-    #add stuff for calculation/biomass/radius data/result
+
 
 
 class DeleteForm(forms.Form):

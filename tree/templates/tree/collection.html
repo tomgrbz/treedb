@@ -5,6 +5,8 @@
 {% if user.is_authenticated %}
 
 {% block content %}
+
+
 {% if types %}
 
     <ul>
@@ -14,7 +16,7 @@
     {% endfor %}
     </ul>
 {% else %}  
-    <p>No Trees Have Been Added</p>    
+    <p>No Trees Have Been Added</p>
 {% endif %} 
 {% endblock %}
 

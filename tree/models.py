@@ -1,8 +1,9 @@
 from time import timezone
 from django.db import models
-import datetime
 # Create your models here.
 
+
+#These are all model objects which represent the tables in our database
 class Neighborhood(models.Model):
     nid = models.AutoField(db_column='nId', primary_key=True)  # Field name made lowercase.
     neighborhood = models.CharField(max_length=64)

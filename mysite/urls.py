@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tree/', include(('tree.urls', 'tree'), namespace='tree')),
     path('tree/', include('django.contrib.auth.urls')),
+
     #path('accounts/login/',include('tree.urls')),
     
 

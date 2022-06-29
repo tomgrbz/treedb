@@ -8,17 +8,22 @@ import decimal
 from django.contrib.auth.forms import UserCreationForm
 from django.conf import settings
 from django import template
+import json
+
+
 # Create your views here.
+#view function for the home webpage
 def home(request):
     return render(request, 'tree/home.html', {})
 
 
-
+#view function for the create webpage
 def create(request):
 
     if not request.user.is_authenticated:
         return redirect('/tree/login')
-
+    
+    #once the create tree button is clicked, then validate the info and create the tree
     if request.method == "POST":
         form = CreateNewTree(request.POST)
 
@@ -50,29 +55,32 @@ def create(request):
                 calc.save()
                 result = Result(tree=t, tree_name=n, description=desc, year=rad_year, carbon_absorbed=ab, carbon_stocked=st, carbon_produced=prod)
                 result.save()
-                return render(request, 'tree/view.html', {'tree': t})
-            #t = Tree(type=n, address=street, alive=alive)
+                return render(request, 'tree/view.html', {'tree': t, 'avg': r, 'results': result})
+            
             else:
                 return HttpResponseRedirect('/tree/create')
            
 
-            #return render(request, 'tree/view.html', {'tree': t}) #view(request, t.tid)#HttpResponseRedirect(f'/tree/{t.tid}/view')
-#render pass in tree-view with t.tid
+           
     else:
         form = CreateNewTree()
         return render(request, 'tree/create.html', {'form': form})
 
 
-
+#returns the carbon stocked amount
 def stock(biomass):
-    return decimal.Decimal(biomass) * decimal.Decimal(.47)
+    return round(decimal.Decimal(biomass) * decimal.Decimal(.47), 5)
 
+#returns the carbon absorbed amount
 def absorb(stock):
-    return decimal.Decimal(stock) * decimal.Decimal(3.67)
+    return round(decimal.Decimal(stock) * decimal.Decimal(3.67), 5)
 
+#returns the carbon produced amount
 def produce(stock):
-    return decimal.Decimal(stock) * decimal.Decimal(2.67)
+    return round(decimal.Decimal(stock) * decimal.Decimal(2.67), 5)
 
+
+#checks that a street is a valid street within the neighborhood
 def check_street(street):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * from street;")
@@ -86,6 +94,8 @@ def check_street(street):
             cursor.execute("SELECT sid from street where address = %s;", [street])
             return cursor.fetchone()
 
+
+#checks that a neighborhood is valid within the database
 def check_neigborhood(n):
      with connection.cursor() as cursor:
         cursor.execute("SELECT * from neighborhood;")
@@ -101,7 +111,7 @@ def check_neigborhood(n):
 
 
 
-
+#view function for registration page
 def register(request):
     
     if request.method == 'POST':
@@ -114,40 +124,27 @@ def register(request):
     return render(request, 'tree/register.html', {'form': form})
 
 
-#class DetailView(generic.DetailView):
-#    model = Tree
-#    template_name = 'tree/view.html'
+#view function for main view page of an individual tree
 def view(request, tid):
     t = get_object_or_404(Tree, pk=tid)
     avg = RadiusData.objects.get(tree=t.tid)
     results = Result.objects.get(tree=t.tid)
     return render(request, 'tree/view.html', {'tree': t, 'avg': avg, 'results': results})
-'''
-def collection(request):
-
-    
-    context = {'list': Tree.objects.all()}
-    return render(request, 'tree/collection.html', context)
 
 
-class AllView(generic.ListView):
-    template_name = 'tree/collection.html'
-    context_object_name = 'latest_tree_list'
-
-    def get_queryset(self): 
-        return TreeType.objects.all()
-        '''
-
+#view function for webpage of all tree scientific names
 def collection(request):
     if not request.user.is_authenticated:
         return redirect('/tree/login')
     else:
         types = TreeType.objects.all()
+
+
         
         return render(request, 'tree/collection.html', {'types': types})
         
 
-
+#view function for all trees of a given type in boston
 def neighbor_view(request, ttid):
     trees = Tree.objects.filter(type=ttid)
     n_list=[]
@@ -168,7 +165,7 @@ def neighbor_view(request, ttid):
     return render(request, 'tree/area.html',  {'n_list' : n_list, 'st_list' : st_list, 'trees': trees})
 
 
-
+#view function for delete webpage
 def delete_view(request, tid):
     tree = Tree.objects.get(tid=tid)
     if request.method == "POST":
@@ -181,8 +178,6 @@ def delete_view(request, tid):
                 tree.delete()
                 
                 return HttpResponseRedirect('/tree/collection')
-
-
 
     else: 
 

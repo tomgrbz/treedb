@@ -1,15 +1,20 @@
 {% extends 'tree/base.html' %} 
 
-
+{% load auth_extras %}
 {% block title %} Create a Tree {% endblock %} 
+{% load crispy_forms_tags %}
+
+    
 
 {% block content %}
+{% if request.user|has_group:"Qualified User" %}
 <h3>Create a New Tree Below</h3>
 <form method="POST" action="" class="form-group">
     {% csrf_token %}
     <div class="input-group mb-3">
         
-            {{form.as_p}}
+            {{form|crispy}}
+            
             <a href='https://apps-scf-cfs.rncan.gc.ca/calc/en/biomass-calculator'>Use this link for biomass calculations</a>
     </div>
 
@@ -21,4 +26,9 @@
 
 <br>
 
+{% else %} 
+<p> As a Standard User you do not have access to this page</p>
+
+{% endif %}
 {% endblock %}
+
